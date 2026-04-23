@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>UNIMCO — ECO-Almag</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --black:   #3C3C3C;
+    --green:   #9CCFA4;
+    --base:    #FDFDFC;
+    --soft:    #E3F1E5;
+    --neutral: #CFD6CF;
+    --deep:    #4E735A;
+    --white:   #FFFFFF;
+    --subtext: #5A605A;
+    --font: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { background: var(--base); color: var(--black); font-family: var(--font); min-width: 1440px; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ── NAV ── */
+  nav { background: var(--deep); height: 64px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
+  .nav-inner { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 60px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: 0.06em; }
+  .nav-links { display: flex; align-items: center; list-style: none; }
+  .nav-links li a { display: block; padding: 0 18px; height: 64px; line-height: 64px; font-size: 12px; font-weight: 600; letter-spacing: 0.10em; color: rgba(255,255,255,0.78); text-transform: uppercase; transition: color 0.2s; }
+  .nav-links li a:hover { color: var(--green); }
+  .nav-links li.active a { background: var(--green); color: var(--deep); }
+  .nav-cta a { padding: 9px 24px; border: 1.5px solid var(--green); color: var(--green); font-size: 12px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; transition: all 0.2s; }
+  .nav-cta a:hover { background: var(--green); color: var(--deep); }
+
+  /* ── HERO ── */
+  .hero {
+    display: grid;
+    grid-template-columns: 52% 48%;
+    height: 600px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* 왼쪽 패널 */
+  .hero-left {
+    background: var(--deep);
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+  }
+  .hero-left::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.2) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* 텍스트 슬라이드 — padding 오른쪽으로 당겨서 이미지에 가깝게 */
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    /* ✅ 좌우 패딩 조정: 왼쪽 줄이고 오른쪽도 줄여서 텍스트 우측 이동 */
+    padding: 0 48px 80px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.75s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .hero-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .slide-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 16px;
+    border: 1px solid rgba(156,207,164,0.45);
+    background: rgba(156,207,164,0.08);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--green);
+    letter-spacing: 0.06em;
+    margin-bottom: 22px;
+    width: fit-content;
+  }
+
+  .hero-title {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.18;
+    color: var(--white);
+    margin-bottom: 20px;
+    word-break: keep-all;
+  }
+  .hero-title .accent { color: var(--green); font-weight: 300; }
+
+  .hero-sub {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.82;
+    color: rgba(255,255,255,0.65);
+    max-width: 100%;
+    margin-bottom: 40px;
+    word-break: keep-all;
+  }
+
+  .hero-btns { display: flex; gap: 14px; }
+
+  /* 도트 */
+  .hero-dots {
+    position: absolute;
+    bottom: 28px;
+    left: 80px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    z-index: 10;
+  }
+  .hero-dot {
+    height: 4px;
+    width: 36px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.22);
+    cursor: pointer;
+    transition: all 0.35s;
+    border: none;
+    padding: 0;
+  }
+  .hero-dot.active { background: var(--green); width: 52px; }
+
+  /* ✅ 화살표 버튼 */
+  .hero-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.30);
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(6px);
+    color: var(--white);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.22s;
+    line-height: 1;
+  }
+  .hero-arrow:hover {
+    background: rgba(156,207,164,0.25);
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .hero-arrow-left  { left: 20px; }
+  .hero-arrow-right { right: 20px; }
+
+  /* 오른쪽 이미지 */
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-right-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.75s ease;
+  }
+  .hero-right-slide.active { opacity: 1; }
+  .hero-right-slide img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.72) saturate(0.75);
+    transform: scale(1.04);
+    transition: transform 6s ease;
+  }
+  .hero-right-slide.active img { transform: scale(1.0); }
+  .hero-right-slide::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(78,115,90,0.22) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  /* ── BTN ── */
+  .btn { display: inline-block; padding: 13px 28px; font-family: var(--font); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.22s; cursor: pointer; border: 1.5px solid transparent; }
+  .btn-outline-white { border-color: rgba(255,255,255,0.72); color: var(--white); }
+  .btn-outline-white:hover { background: var(--white); color: var(--deep); }
+  .btn-green { background: var(--green); color: var(--deep); border-color: var(--green); }
+  .btn-green:hover { background: transparent; color: var(--green); }
+  .btn-outline-deep { border-color: var(--deep); color: var(--deep); }
+  .btn-outline-deep:hover { background: var(--deep); color: var(--white); }
+
+  /* ── SECTION COMMON ── */
+  .sec-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--deep); margin-bottom: 16px; }
+  .sec-title { font-size: 34px; font-weight: 700; line-height: 1.28; color: var(--black); word-break: keep-all; }
+  .sec-sub { font-size: 15px; line-height: 1.75; color: var(--subtext); margin-top: 14px; word-break: keep-all; }
+
+  /* ── CORE VALUE ── */
+  .core-value { background: var(--base); padding: 100px 0 80px; }
+  .core-value .top { text-align: center; margin-bottom: 60px; padding: 0 60px; }
+  .cv-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; max-width: 1320px; margin: 0 auto; padding: 0 60px; }
+  .cv-card { background: var(--white); border: 1px solid var(--neutral); overflow: hidden; transition: transform 0.28s ease, box-shadow 0.28s ease; }
+  .cv-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(78,115,90,0.13); }
+  .cv-img { height: 220px; overflow: hidden; position: relative; }
+  .cv-img img { filter: brightness(0.88) saturate(0.85); transition: transform 0.6s ease; }
+  .cv-card:hover .cv-img img { transform: scale(1.05); }
+  .cv-img-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(30,50,35,0.5) 0%, transparent 55%); }
+  .cv-body { padding: 28px 28px 24px; }
+  .cv-stat { font-size: 36px; font-weight: 800; color: var(--black); margin-bottom: 10px; letter-spacing: -0.02em; }
+  .cv-desc { font-size: 14px; line-height: 1.72; color: var(--subtext); word-break: keep-all; }
+  .cv-more { display: inline-block; margin-top: 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--deep); text-decoration: underline; text-underline-offset: 4px; }
+  .core-value .cta-wrap { text-align: center; margin-top: 56px; }
+
+  /* ── APPLICATIONS ── */
+  .applications { background: var(--soft); padding: 100px 0 80px; }
+  .applications .top { padding: 0 60px; max-width: 1320px; margin: 0 auto 56px; }
+  .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1320px; margin: 0 auto; padding: 0 60px; }
+  .app-card { background: var(--white); overflow: hidden; transition: transform 0.25s ease; cursor: pointer; }
+  .app-card:hover { transform: translateY(-4px); }
+  .app-img { height: 172px; overflow: hidden; }
+  .app-img img { filter: brightness(0.85) saturate(0.8); transition: transform 0.5s ease; }
+  .app-card:hover .app-img img { transform: scale(1.06); }
+  .app-body { padding: 20px 20px 18px; }
+  .app-industry { font-size: 14px; font-weight: 600; color: var(--black); margin-bottom: 6px; }
+  .app-desc { font-size: 13px; line-height: 1.65; color: var(--subtext); margin-bottom: 12px; word-break: keep-all; }
+  .app-more { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--deep); text-decoration: underline; text-underline-offset: 3px; }
+  .applications .cta-wrap { text-align: center; margin-top: 52px; }
+
+  /* ── CLIENTS ── */
+  .clients { background: var(--base); padding: 80px 0; overflow: hidden; }
+  .clients .top { text-align: center; margin-bottom: 48px; }
+  .clients-track-wrap { position: relative; overflow: hidden; }
+  .clients-track-wrap::before, .clients-track-wrap::after { content: ''; position: absolute; top: 0; bottom: 0; width: 140px; z-index: 2; pointer-events: none; }
+  .clients-track-wrap::before { left: 0; background: linear-gradient(to right, var(--base), transparent); }
+  .clients-track-wrap::after  { right: 0; background: linear-gradient(to left, var(--base), transparent); }
+  .clients-track { display: flex; gap: 20px; animation: ticker 64s linear infinite; width: max-content; }
+  .clients-track:hover { animation-play-state: paused; }
+  @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  .client-logo { height: 46px; min-width: 130px; background: var(--soft); border: 1px solid var(--neutral); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--deep); padding: 0 24px; white-space: nowrap; flex-shrink: 0; }
+
+  /* ── CONTACT SPLIT ── */
+  .contact-cta { display: grid; grid-template-columns: 54% 46%; min-height: 540px; }
+  .cta-img-wrap { position: relative; overflow: hidden; }
+  .cta-img-wrap img { filter: brightness(0.75) saturate(0.85); }
+  .cta-form-panel { background: var(--deep); padding: 68px 60px; display: flex; flex-direction: column; justify-content: center; }
+  .form-title { font-size: 28px; font-weight: 700; color: var(--white); margin-bottom: 36px; line-height: 1.35; word-break: keep-all; }
+  .form-row { margin-bottom: 18px; }
+  .form-row.two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 7px; }
+  .form-group label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; color: rgba(255,255,255,0.42); text-transform: uppercase; }
+  .form-group input, .form-group textarea { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14); color: var(--white); font-family: var(--font); font-size: 14px; padding: 12px 15px; outline: none; transition: border-color 0.2s; resize: none; }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.22); }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--green); }
+  .form-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+  .form-privacy { font-size: 11px; color: rgba(255,255,255,0.30); }
+
+  /* ── NEWS ── */
+  .news { background: var(--base); padding: 100px 0 80px; }
+  .news .top { max-width: 1320px; margin: 0 auto 52px; padding: 0 60px; display: flex; align-items: flex-end; justify-content: space-between; }
+  .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; max-width: 1320px; margin: 0 auto; padding: 0 60px; }
+  .news-card { background: var(--white); border: 1px solid var(--neutral); overflow: hidden; cursor: pointer; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  .news-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(78,115,90,0.10); }
+  .news-img { height: 196px; overflow: hidden; }
+  .news-img img { filter: brightness(0.82) saturate(0.85); transition: transform 0.55s ease; }
+  .news-card:hover .news-img img { transform: scale(1.05); }
+  .news-body { padding: 24px 24px 20px; }
+  .news-meta { font-size: 11px; color: var(--neutral); letter-spacing: 0.06em; margin-bottom: 10px; }
+  .news-title { font-size: 15px; font-weight: 600; line-height: 1.58; color: var(--black); margin-bottom: 16px; word-break: keep-all; }
+  .news-more { font-size: 11px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--deep); text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ── FOOTER ── */
+  footer { background: #1C2B21; padding: 72px 0 40px; }
+  .footer-inner { max-width: 1440px; margin: 0 auto; padding: 0 60px; display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr; gap: 56px; }
+  .footer-logo { font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: 0.06em; margin-bottom: 18px; }
+  .footer-brand p { font-size: 13px; line-height: 1.9; color: rgba(255,255,255,0.36); max-width: 300px; word-break: keep-all; }
+  .footer-col h4 { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green); margin-bottom: 20px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+  .footer-col ul li a { font-size: 13px; color: rgba(255,255,255,0.45); transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--green); }
+  .footer-bottom { max-width: 1440px; margin: 52px auto 0; padding: 24px 60px 0; border-top: 1px solid rgba(255,255,255,0.07); display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { font-size: 11px; color: rgba(255,255,255,0.22); }
+
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-d1 { transition-delay: 0.10s; }
+  .reveal-d2 { transition-delay: 0.20s; }
+  .reveal-d3 { transition-delay: 0.30s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">UNIMCO</div>
+    <ul class="nav-links">
+      <li class="active"><a href="#">HOME</a></li>
+      <li><a href="#">MATERIAL</a></li>
+      <li><a href="#">PRODUCT</a></li>
+      <li><a href="#">CLIENTS</a></li>
+      <li><a href="#">NEWS</a></li>
+      <li><a href="#">ABOUT</a></li>
+    </ul>
+    <div class="nav-cta"><a href="#">CONTACT</a></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+
+  <!-- ✅ 좌측 화살표 -->
+  <button class="hero-arrow hero-arrow-left" id="arrowLeft">&#8592;</button>
+
+  <!-- 왼쪽: 텍스트 슬라이드 -->
+  <div class="hero-left">
+
+    <div class="hero-slide active">
+      <span class="slide-tag">ECO-Almag Technology</span>
+      <h1 class="hero-title">차세대 경량 고강도<br><span class="accent">친환경 알루미늄 합금 솔루션</span></h1>
+      <p class="hero-sub">글로벌 EV 밸류체인의 핵심 파트너로서 소재부터 완제품까지 수직계열화를 완성하는 혁신적 경량화 솔루션</p>
+      <div class="hero-btns">
+        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="#" class="btn btn-green">문의하기</a>
+      </div>
+    </div>
+
+    <div class="hero-slide">
+      <span class="slide-tag">Semiconductor</span>
+      <h1 class="hero-title">반도체 패키징의<br><span class="accent">핵심 소재 혁신</span></h1>
+      <p class="hero-sub">Wafer Ring Frame 경량화로 생산성 +20% 향상. 삼성, SK하이닉스, TSMC 등 글로벌 Top-tier 향 개발 진행</p>
+      <div class="hero-btns">
+        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="#" class="btn btn-green">문의하기</a>
+      </div>
+    </div>
+
+    <div class="hero-slide">
+      <span class="slide-tag">EV · Battery</span>
+      <h1 class="hero-title">전기차 배터리의<br><span class="accent">경량화 솔루션</span></h1>
+      <p class="hero-sub">배터리 팩 케이스 경량화로 주행거리 향상 및 열관리 최적화. 공정 단순화로 원가 20~40% 절감</p>
+      <div class="hero-btns">
+        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="#" class="btn btn-green">문의하기</a>
+      </div>
+    </div>
+
+    <div class="hero-slide">
+      <span class="slide-tag">Smart Manufacturing</span>
+      <h1 class="hero-title">데이터 기반<br><span class="accent">정밀 제어 공정</span></h1>
+      <p class="hero-sub">CaO 보호막 기술로 안전 용해부터 정밀 압연, 이형 압출까지. IMPEXMETAL(Poland) 글로벌 양산 체계 구축</p>
+      <div class="hero-btns">
+        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="#" class="btn btn-green">문의하기</a>
+      </div>
+    </div>
+
+    <div class="hero-slide">
+      <span class="slide-tag">Defense · Armor</span>
+      <h1 class="hero-title">차세대 경량<br><span class="accent">방호 소재</span></h1>
+      <p class="hero-sub">기존 강철 대비 56% 경량화, 충격흡수율 5배. ADD(국방과학연구소) 협력 기반 경량 방탄 솔루션</p>
+      <div class="hero-btns">
+        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="#" class="btn btn-green">문의하기</a>
+      </div>
+    </div>
+
+    <div class="hero-slide">
+      <span class="slide-tag">ESG · CBAM Ready</span>
+      <h1 class="hero-title">지속 가능한<br><span class="accent">친환경 소재 혁신</span></h1>
+      <p class="hero-sub">SF₆/Be 완전 배제, 탄소배출 30%+ 감축. EU CBAM 규제를 선제적으로 충족하는 유일한 친환경 합금</p>
+      <div class="hero-btns">
+        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="#" class="btn btn-green">문의하기</a>
+      </div>
+    </div>
+
+    <!-- 도트 -->
+    <div class="hero-dots">
+      <button class="hero-dot active" data-dot="0"></button>
+      <button class="hero-dot" data-dot="1"></button>
+      <button class="hero-dot" data-dot="2"></button>
+      <button class="hero-dot" data-dot="3"></button>
+      <button class="hero-dot" data-dot="4"></button>
+      <button class="hero-dot" data-dot="5"></button>
+    </div>
+  </div>
+
+  <!-- 오른쪽: 이미지 슬라이드 — 레퍼런스 분위기 (어두운 산업/소재 톤) -->
+  <div class="hero-right">
+
+    <!-- Slide 1: 알루미늄 판재 (레퍼런스 첫 슬라이드 느낌) -->
+    <div class="hero-right-slide active">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80&fit=crop&crop=center" alt="알루미늄 금속 소재">
+    </div>
+
+    <!-- Slide 2: 반도체 웨이퍼 -->
+    <div class="hero-right-slide">
+      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=80&fit=crop&crop=center" alt="반도체">
+    </div>
+
+    <!-- Slide 3: EV 배터리 -->
+    <div class="hero-right-slide">
+      <img src="https://images.unsplash.com/photo-1620288627223-53302f4e8c74?w=900&q=80&fit=crop&crop=center" alt="EV 배터리팩">
+    </div>
+
+    <!-- Slide 4: 용융 금속 제조 -->
+    <div class="hero-right-slide">
+      <img src="https://images.unsplash.com/photo-1565680018434-b8b01b51ed42?w=900&q=80&fit=crop&crop=center" alt="용융 금속 제조">
+    </div>
+
+    <!-- Slide 5: 방산 구조물 -->
+    <div class="hero-right-slide">
+      <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=900&q=80&fit=crop&crop=center" alt="방산 구조">
+    </div>
+
+    <!-- Slide 6: 친환경 자연 -->
+    <div class="hero-right-slide">
+      <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=900&q=80&fit=crop&crop=center" alt="친환경">
+    </div>
+  </div>
+
+  <!-- ✅ 우측 화살표 -->
+  <button class="hero-arrow hero-arrow-right" id="arrowRight">&#8594;</button>
+
+</section>
+
+<!-- CORE VALUE -->
+<section class="core-value">
+  <div class="top reveal">
+    <span class="sec-label">Core Value</span>
+    <h2 class="sec-title">세 가지 숫자로 증명합니다</h2>
+    <p class="sec-sub">ECO-Almag의 성능은 수치로 말합니다.</p>
+  </div>
+  <div class="cv-cards">
+    <div class="cv-card reveal reveal-d1">
+      <div class="cv-img">
+        <img src="https://images.unsplash.com/photo-1565043666747-69f6646db940?w=700&q=80&fit=crop" alt="경량 소재" loading="lazy">
+        <div class="cv-img-overlay"></div>
+      </div>
+      <div class="cv-body">
+        <div class="cv-stat">2.62 g/cm³</div>
+        <div class="cv-desc">스테인리스 대비 3분의 1 수준의 밀도. 같은 강도에서 무게를 혁신적으로 낮춥니다.</div>
+        <a href="#" class="cv-more">자세히 보기</a>
+      </div>
+    </div>
+    <div class="cv-card reveal reveal-d2">
+      <div class="cv-img">
+        <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=700&q=80&fit=crop" alt="고강도" loading="lazy">
+        <div class="cv-img-overlay"></div>
+      </div>
+      <div class="cv-body">
+        <div class="cv-stat">650 MPa</div>
+        <div class="cv-desc">기존 알루미늄 합금 대비 높은 인장강도. 정밀 구조가 필요한 현장에서 결정적 차이를 만듭니다.</div>
+        <a href="#" class="cv-more">자세히 보기</a>
+      </div>
+    </div>
+    <div class="cv-card reveal reveal-d3">
+      <div class="cv-img">
+        <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=700&q=80&fit=crop" alt="친환경" loading="lazy">
+        <div class="cv-img-overlay"></div>
+      </div>
+      <div class="cv-body">
+        <div class="cv-stat">ZERO SF₆</div>
+        <div class="cv-desc">유해 가스 SF₆ 없이 생산됩니다. 친환경 공정이 성능을 포기하지 않아도 된다는 증거.</div>
+        <a href="#" class="cv-more">자세히 보기</a>
+      </div>
+    </div>
+  </div>
+  <div class="cta-wrap reveal">
+    <a href="#" class="btn btn-outline-deep">전체 소재 이야기 보기</a>
+  </div>
+</section>
+
+<!-- APPLICATIONS -->
+<section class="applications">
+  <div class="top reveal">
+    <span class="sec-label">Applications</span>
+    <h2 class="sec-title">전 산업을 아우르는 적용 영역</h2>
+  </div>
+  <div class="app-grid">
+    <div class="app-card reveal reveal-d1">
+      <div class="app-img">
+        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80&fit=crop" alt="반도체 장비" loading="lazy">
+      </div>
+      <div class="app-body">
+        <div class="app-industry">반도체 · 장비</div>
+        <div class="app-desc">웨이퍼링 프레임 및 장비 부품 경량화로 생산성 향상</div>
+        <a href="#" class="app-more">더보기</a>
+      </div>
+    </div>
+    <div class="app-card reveal reveal-d2">
+      <div class="app-img">
+        <img src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=600&q=80&fit=crop" alt="EV 배터리" loading="lazy">
+      </div>
+      <div class="app-body">
+        <div class="app-industry">EV · 배터리</div>
+        <div class="app-desc">배터리팩 케이스 및 방열 소재, 열관리 대응</div>
+        <a href="#" class="app-more">더보기</a>
+      </div>
+    </div>
+    <div class="app-card reveal reveal-d3">
+      <div class="app-img">
+        <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&q=80&fit=crop" alt="선박 방산" loading="lazy">
+      </div>
+      <div class="app-body">
+        <div class="app-industry">선박 · 방산</div>
+        <div class="app-desc">경량 구조체 적용으로 기동성 향상 및 내구성 확보</div>
+        <a href="#" class="app-more">더보기</a>
+      </div>
+    </div>
+    <div class="app-card reveal">
+      <div class="app-img">
+        <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&q=80&fit=crop" alt="디스플레이" loading="lazy">
+      </div>
+      <div class="app-body">
+        <div class="app-industry">디스플레이</div>
+        <div class="app-desc">정밀 프레임 및 지지 구조, 치수 안정성 확보</div>
+        <a href="#" class="app-more">더보기</a>
+      </div>
+    </div>
+  </div>
+  <div class="cta-wrap reveal">
+    <a href="#" class="btn btn-outline-deep">전체 제품 보기</a>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section class="clients">
+  <div class="top reveal">
+    <h2 class="sec-title">UNIMCO와 함께 가는 기업</h2>
+  </div>
+  <div class="clients-track-wrap">
+    <div class="clients-track">
+      <div class="client-logo">삼성전자</div>
+      <div class="client-logo">Client B</div>
+      <div class="client-logo">Client C</div>
+      <div class="client-logo">Client D</div>
+      <div class="client-logo">Client E</div>
+      <div class="client-logo">Client F</div>
+      <div class="client-logo">Client G</div>
+      <div class="client-logo">Client H</div>
+      <div class="client-logo">Client I</div>
+      <div class="client-logo">Client J</div>
+      <div class="client-logo">삼성전자</div>
+      <div class="client-logo">Client B</div>
+      <div class="client-logo">Client C</div>
+      <div class="client-logo">Client D</div>
+      <div class="client-logo">Client E</div>
+      <div class="client-logo">Client F</div>
+      <div class="client-logo">Client G</div>
+      <div class="client-logo">Client H</div>
+      <div class="client-logo">Client I</div>
+      <div class="client-logo">Client J</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT SPLIT -->
+<section class="contact-cta">
+  <div class="cta-img-wrap">
+    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1000&q=80&fit=crop&crop=center" alt="알루미늄 마그네슘 합금 주조" loading="lazy">
+  </div>
+  <div class="cta-form-panel">
+    <div class="form-title">무엇이든<br>물어보세요</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>담당자 성함</label>
+        <input type="text" placeholder="성함을 입력하세요">
+      </div>
+    </div>
+    <div class="form-row two">
+      <div class="form-group">
+        <label>이메일</label>
+        <input type="email" placeholder="info@company.com">
+      </div>
+      <div class="form-group">
+        <label>연락처</label>
+        <input type="tel" placeholder="010-0000-0000">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>문의 내용</label>
+        <textarea rows="4" placeholder="산업군, 용도, 요구 성능 등을 간단히 알려주시면 빠르게 검토해드립니다."></textarea>
+      </div>
+    </div>
+    <div class="form-bottom">
+      <p class="form-privacy">개인정보 처리방침에 동의합니다.</p>
+      <a href="#" class="btn btn-green">제출하기</a>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="news">
+  <div class="top reveal">
+    <div>
+      <span class="sec-label">News & Update</span>
+      <h2 class="sec-title">최근 소식</h2>
+    </div>
+    <a href="#" class="btn btn-outline-deep" style="font-size:11px; padding:10px 22px;">전체 소식 보기</a>
+  </div>
+  <div class="news-grid">
+    <div class="news-card reveal reveal-d1">
+      <div class="news-img">
+        <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=700&q=80&fit=crop" alt="뉴스 1" loading="lazy">
+      </div>
+      <div class="news-body">
+        <div class="news-meta">2026. 04. 16</div>
+        <div class="news-title">어디에 발만을 영업이익이 낮고 어쩌구 기사 제목</div>
+        <a href="#" class="news-more">Read More</a>
+      </div>
+    </div>
+    <div class="news-card reveal reveal-d2">
+      <div class="news-img">
+        <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=700&q=80&fit=crop" alt="뉴스 2" loading="lazy">
+      </div>
+      <div class="news-body">
+        <div class="news-meta">2026. 04. 14</div>
+        <div class="news-title">기사 제목이 길 경우를 대비해서 이런 식으로 작성해보는 예시 제목</div>
+        <a href="#" class="news-more">Read More</a>
+      </div>
+    </div>
+    <div class="news-card reveal reveal-d3">
+      <div class="news-img">
+        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=700&q=80&fit=crop" alt="뉴스 3" loading="lazy">
+      </div>
+      <div class="news-body">
+        <div class="news-meta">2026. 04. 10</div>
+        <div class="news-title">홈페이지 만드는 비용과 관련한 소식 및 업데이트 내용</div>
+        <a href="#" class="news-more">Read More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">UNIMCO</div>
+      <p>차세대 경량 고강도 친환경 알루미늄 합금 솔루션.<br>본사: 전라북도 군산시<br>연구소: 인천광역시 연수구 송도</p>
+    </div>
+    <div class="footer-col">
+      <h4>회사 소개</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">소재 이야기</a></li>
+        <li><a href="#">제품</a></li>
+        <li><a href="#">걸어온 길</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>소식</h4>
+      <ul>
+        <li><a href="#">News</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">개인정보처리방침</a></li>
+        <li><a href="#">이용약관</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>고객 지원</h4>
+      <ul>
+        <li><a href="#">info@unimco.com</a></li>
+        <li><a href="#">000-000-0000</a></li>
+        <li><a href="#">문의하기</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 UNIMCO Corporation. All Rights Reserved.</p>
+    <p>개인정보처리방침 &nbsp;·&nbsp; 이용약관</p>
+  </div>
+</footer>
+
+<script>
+  // ── Hero Slider ──────────────────────────────
+  const textSlides = document.querySelectorAll('.hero-slide');
+  const imgSlides  = document.querySelectorAll('.hero-right-slide');
+  const dots       = document.querySelectorAll('.hero-dot');
+  const total      = textSlides.length;
+  let current = 0;
+  let timer   = null;
+
+  function goTo(idx) {
+    textSlides[current].classList.remove('active');
+    imgSlides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (idx + total) % total;
+    textSlides[current].classList.add('active');
+    imgSlides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  function startAuto() { timer = setInterval(() => goTo(current + 1), 5000); }
+  function resetAuto()  { clearInterval(timer); startAuto(); }
+
+  // 도트 클릭
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      goTo(parseInt(dot.dataset.dot));
+      resetAuto();
+    });
+  });
+
+  // ✅ 화살표 클릭
+  document.getElementById('arrowLeft').addEventListener('click', () => {
+    goTo(current - 1);
+    resetAuto();
+  });
+  document.getElementById('arrowRight').addEventListener('click', () => {
+    goTo(current + 1);
+    resetAuto();
+  });
+
+  startAuto();
+
+  // ── Scroll reveal ──────────────────────────
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.10 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

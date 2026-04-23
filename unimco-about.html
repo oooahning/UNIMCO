@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>UNIMCO — 회사 소개</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --black:   #3C3C3C;
+    --green:   #9CCFA4;
+    --base:    #FDFDFC;
+    --soft:    #E3F1E5;
+    --neutral: #CFD6CF;
+    --deep:    #4E735A;
+    --white:   #FFFFFF;
+    --subtext: #5A605A;
+    --divider: #BFC9BF;
+    --font: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { background: var(--base); color: var(--black); font-family: var(--font); min-width: 1440px; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ── NAV ── */
+  nav { background: var(--deep); height: 64px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
+  .nav-inner { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 60px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: 0.06em; }
+  .nav-links { display: flex; align-items: center; list-style: none; }
+  .nav-links li a { display: block; padding: 0 18px; height: 64px; line-height: 64px; font-size: 12px; font-weight: 600; letter-spacing: 0.10em; color: rgba(255,255,255,0.75); text-transform: uppercase; transition: color 0.22s ease, font-size 0.22s ease, letter-spacing 0.22s ease; }
+  .nav-links li a:hover { color: var(--green); font-size: 13px; letter-spacing: 0.06em; }
+  .nav-links li.active a { background: var(--green); color: var(--deep); font-size: 12px; }
+  .nav-links li.active a:hover { font-size: 12px; color: var(--deep); }
+  .nav-cta a { padding: 9px 24px; border: 1.5px solid var(--green); color: var(--green); font-size: 12px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; transition: all 0.2s; }
+  .nav-cta a:hover { background: var(--green); color: var(--deep); }
+
+  /* ── BTN ── */
+  .btn { display: inline-block; padding: 13px 28px; font-family: var(--font); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.22s; cursor: pointer; border: 1.5px solid transparent; }
+  .btn-outline-deep { border-color: var(--deep); color: var(--deep); }
+  .btn-outline-deep:hover { background: var(--deep); color: var(--white); }
+  .btn-outline-white { border-color: rgba(255,255,255,0.72); color: var(--white); }
+  .btn-outline-white:hover { background: var(--white); color: var(--deep); }
+  .btn-green { background: var(--green); color: var(--deep); border-color: var(--green); }
+  .btn-green:hover { background: transparent; color: var(--green); }
+
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .d1 { transition-delay: 0.10s; }
+  .d2 { transition-delay: 0.20s; }
+  .d3 { transition-delay: 0.32s; }
+
+  /* ══════════════════════════════
+     01. HERO — 짧고 기술적
+  ══════════════════════════════ */
+  .hero {
+    background: var(--deep);
+    padding: 100px 0 88px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,0,0,0.2) 0%, transparent 60%); pointer-events: none; }
+  .hero-inner { max-width: 1320px; margin: 0 auto; padding: 0 60px; position: relative; }
+  .hero-kicker { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--green); margin-bottom: 24px; display: block; }
+  .hero-title { font-size: 52px; font-weight: 700; color: var(--white); line-height: 1.18; margin-bottom: 28px; word-break: keep-all; }
+  .hero-sub { font-size: 16px; line-height: 1.75; color: rgba(255,255,255,0.60); max-width: 600px; word-break: keep-all; }
+
+  /* ══════════════════════════════
+     02. 기술 기반 — 왜 존재하는가
+     Neutral 배경, 좌우 그리드
+  ══════════════════════════════ */
+  .origin-sec { background: var(--neutral); padding: 100px 0; }
+  .origin-inner { max-width: 1320px; margin: 0 auto; padding: 0 60px; display: grid; grid-template-columns: 320px 1fr; gap: 100px; align-items: start; }
+  .origin-label { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--deep); margin-bottom: 20px; }
+  .origin-headline { font-size: 28px; font-weight: 700; color: var(--black); line-height: 1.3; word-break: keep-all; }
+
+  .origin-body { display: flex; flex-direction: column; gap: 20px; padding-top: 4px; }
+  .origin-body p { font-size: 16px; line-height: 1.88; color: var(--subtext); word-break: keep-all; }
+  .origin-body p strong { color: var(--black); font-weight: 600; }
+
+  /* ══════════════════════════════
+     03. 핵심 기술 포인트
+     Base 배경, 3개 가로 블록
+  ══════════════════════════════ */
+  .tech-sec { background: var(--base); padding: 100px 0; }
+  .tech-inner { max-width: 1320px; margin: 0 auto; padding: 0 60px; }
+  .tech-head { margin-bottom: 60px; }
+  .tech-head h2 { font-size: 26px; font-weight: 700; color: var(--black); margin-bottom: 10px; word-break: keep-all; }
+  .tech-head p { font-size: 14px; color: var(--subtext); }
+
+  .tech-cols { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .tech-col { padding: 40px 40px 40px 0; border-right: 1px solid var(--divider); }
+  .tech-col:last-child { border-right: none; padding-right: 0; padding-left: 40px; }
+  .tech-col:nth-child(2) { padding-left: 40px; }
+
+  .tech-col-num { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; color: var(--neutral); margin-bottom: 16px; }
+  .tech-col-name { font-size: 20px; font-weight: 700; color: var(--black); margin-bottom: 12px; line-height: 1.3; }
+  .tech-arrow { font-size: 13px; font-weight: 600; color: var(--deep); margin-bottom: 8px; }
+  .tech-result { font-size: 15px; font-weight: 700; color: var(--deep); margin-bottom: 12px; }
+  .tech-desc { font-size: 13px; line-height: 1.75; color: var(--subtext); word-break: keep-all; }
+
+  /* ══════════════════════════════
+     04. 사업 구조 — 플로우
+     Deep 배경
+  ══════════════════════════════ */
+  .biz-sec { background: var(--deep); padding: 100px 0; }
+  .biz-inner { max-width: 1320px; margin: 0 auto; padding: 0 60px; }
+  .biz-head { margin-bottom: 64px; }
+  .biz-head h2 { font-size: 26px; font-weight: 700; color: var(--white); margin-bottom: 12px; word-break: keep-all; }
+  .biz-head p { font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.7; word-break: keep-all; }
+
+  /* 플로우 3단계 */
+  .biz-flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 0; align-items: center; }
+  .biz-step { padding: 36px 32px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+  .biz-step-num { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; color: var(--green); margin-bottom: 14px; text-transform: uppercase; }
+  .biz-step-title { font-size: 22px; font-weight: 700; color: var(--white); margin-bottom: 12px; line-height: 1.2; }
+  .biz-step-desc { font-size: 13px; line-height: 1.72; color: rgba(255,255,255,0.5); word-break: keep-all; }
+  .biz-step-items { display: flex; flex-direction: column; gap: 4px; margin-top: 16px; }
+  .biz-step-item { font-size: 12px; font-weight: 600; color: var(--green); padding: 4px 0; border-top: 1px solid rgba(156,207,164,0.2); }
+  .biz-step-item:first-child { border-top: none; }
+
+  /* 화살표 */
+  .biz-arrow { display: flex; align-items: center; justify-content: center; padding: 0 20px; }
+  .biz-arrow svg { width: 28px; height: 28px; color: rgba(156,207,164,0.5); }
+
+  .biz-summary { margin-top: 48px; text-align: center; font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.65); line-height: 1.6; word-break: keep-all; }
+  .biz-summary strong { color: var(--green); font-weight: 700; }
+
+  /* ══════════════════════════════
+     05. 글로벌 공급 기반
+     Soft 배경, 좌우 그리드
+  ══════════════════════════════ */
+  .global-sec { background: var(--soft); padding: 100px 0; }
+  .global-inner { max-width: 1320px; margin: 0 auto; padding: 0 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .global-text { }
+  .global-label { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--deep); margin-bottom: 20px; }
+  .global-headline { font-size: 28px; font-weight: 700; color: var(--black); line-height: 1.3; margin-bottom: 24px; word-break: keep-all; }
+  .global-body { font-size: 15px; line-height: 1.85; color: var(--subtext); word-break: keep-all; }
+  .global-body strong { color: var(--black); font-weight: 600; }
+
+  /* 공급 구조 시각화 */
+  .global-visual { display: flex; flex-direction: column; gap: 12px; }
+  .supply-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: center; }
+  .supply-node { background: var(--white); border: 1px solid var(--divider); padding: 20px 24px; }
+  .supply-node-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--deep); margin-bottom: 6px; }
+  .supply-node-name { font-size: 16px; font-weight: 700; color: var(--black); margin-bottom: 4px; }
+  .supply-node-desc { font-size: 12px; color: var(--subtext); line-height: 1.5; word-break: keep-all; }
+  .supply-arrow-h { display: flex; align-items: center; justify-content: center; padding: 0 12px; color: var(--deep); font-size: 18px; font-weight: 300; }
+  .supply-arrow-v { display: flex; align-items: center; justify-content: center; padding: 8px 0; color: var(--divider); font-size: 18px; }
+  .supply-node.accent { background: var(--deep); border-color: var(--deep); }
+  .supply-node.accent .supply-node-label { color: var(--green); }
+  .supply-node.accent .supply-node-name { color: var(--white); }
+  .supply-node.accent .supply-node-desc { color: rgba(255,255,255,0.55); }
+
+  /* ══════════════════════════════
+     06. 수상 · 인증 — 텍스트만
+  ══════════════════════════════ */
+  .award-sec { background: var(--base); padding: 100px 0; }
+  .award-inner { max-width: 1320px; margin: 0 auto; padding: 0 60px; }
+  .award-head { margin-bottom: 48px; }
+  .award-head h2 { font-size: 26px; font-weight: 700; color: var(--black); }
+  .award-divider { height: 1px; background: var(--neutral); margin-bottom: 48px; }
+  .award-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 80px; }
+  .award-col-header { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--deep); margin-bottom: 20px; }
+  .award-col-line { height: 2px; background: var(--green); width: 160px; margin-bottom: 28px; }
+  .award-list { list-style: none; display: flex; flex-direction: column; }
+  .award-list li { font-size: 14px; color: var(--black); line-height: 1.6; padding: 14px 0; border-bottom: 1px solid var(--divider); word-break: keep-all; }
+  .award-list li:first-child { border-top: 1px solid var(--divider); }
+  .award-list li span { font-size: 12px; color: var(--subtext); margin-left: 8px; }
+  .award-note { margin-top: 36px; font-size: 12px; color: var(--subtext); }
+
+  /* ══════════════════════════════
+     07. 현재 진행
+     Neutral 배경, 3개 산업 + 설명
+  ══════════════════════════════ */
+  .progress-sec { background: var(--neutral); padding: 100px 0; }
+  .progress-inner { max-width: 1320px; margin: 0 auto; padding: 0 60px; display: grid; grid-template-columns: 320px 1fr; gap: 100px; align-items: start; }
+  .progress-left h2 { font-size: 28px; font-weight: 700; color: var(--black); line-height: 1.3; margin-bottom: 16px; word-break: keep-all; }
+  .progress-left p { font-size: 14px; color: var(--subtext); line-height: 1.7; word-break: keep-all; }
+  .progress-items { display: flex; flex-direction: column; gap: 0; }
+  .progress-item { padding: 28px 0; border-bottom: 1px solid var(--divider); display: grid; grid-template-columns: 180px 1fr; gap: 0 40px; align-items: center; }
+  .progress-item:first-child { border-top: 1px solid var(--divider); }
+  .progress-industry { font-size: 18px; font-weight: 700; color: var(--black); }
+  .progress-status { font-size: 14px; color: var(--subtext); line-height: 1.65; word-break: keep-all; }
+  .progress-status strong { color: var(--deep); font-weight: 600; }
+
+  /* ══════════════════════════════
+     08. 오시는 길
+  ══════════════════════════════ */
+  .location-sec { background: var(--base); padding: 100px 0; }
+  .location-inner { max-width: 1320px; margin: 0 auto; padding: 0 60px; }
+  .location-head { margin-bottom: 48px; }
+  .location-head h2 { font-size: 26px; font-weight: 700; color: var(--black); }
+  .location-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .location-card { background: var(--soft); padding: 36px 40px; border: 1px solid var(--divider); }
+  .location-card-label { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--deep); margin-bottom: 12px; }
+  .location-card-line { height: 2px; background: var(--green); width: 100px; margin-bottom: 20px; }
+  .location-card-name { font-size: 18px; font-weight: 700; color: var(--black); margin-bottom: 14px; }
+  .location-card-addr { font-size: 14px; line-height: 1.8; color: var(--subtext); word-break: keep-all; }
+  .map-placeholder { margin-top: 20px; height: 152px; background: var(--neutral); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--subtext); }
+
+  /* ══════════════════════════════
+     09. CTA
+  ══════════════════════════════ */
+  .cta-sec { background: var(--deep); padding: 100px 0; text-align: center; }
+  .cta-sec h2 { font-size: 28px; font-weight: 700; color: var(--white); margin-bottom: 16px; line-height: 1.35; word-break: keep-all; }
+  .cta-sec p { font-size: 15px; color: rgba(255,255,255,0.58); line-height: 1.7; margin-bottom: 40px; }
+
+  /* ══════════════════════════════
+     FOOTER
+  ══════════════════════════════ */
+  footer { background: #1C2B21; padding: 72px 0 40px; }
+  .footer-inner { max-width: 1440px; margin: 0 auto; padding: 0 60px; display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr; gap: 56px; }
+  .footer-logo { font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: 0.06em; margin-bottom: 18px; }
+  .footer-brand p { font-size: 13px; line-height: 1.9; color: rgba(255,255,255,0.36); max-width: 300px; word-break: keep-all; }
+  .footer-col h4 { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green); margin-bottom: 20px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+  .footer-col ul li a { font-size: 13px; color: rgba(255,255,255,0.45); transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--green); }
+  .footer-bottom { max-width: 1440px; margin: 52px auto 0; padding: 24px 60px 0; border-top: 1px solid rgba(255,255,255,0.07); display: flex; justify-content: space-between; }
+  .footer-bottom p { font-size: 11px; color: rgba(255,255,255,0.22); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="unimco-home.html" class="nav-logo">UNIMCO</a>
+    <ul class="nav-links">
+      <li><a href="unimco-home.html">HOME</a></li>
+      <li><a href="unimco-material.html">MATERIAL</a></li>
+      <li><a href="unimco-product.html">PRODUCT</a></li>
+      <li><a href="unimco-clients.html">CLIENTS</a></li>
+      <li><a href="unimco-news.html">NEWS</a></li>
+      <li class="active"><a href="unimco-about.html">ABOUT</a></li>
+    </ul>
+    <div class="nav-cta"><a href="unimco-contact.html">CONTACT</a></div>
+  </div>
+</nav>
+
+<!-- ── 01. HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="hero-kicker">About UNIMCO</span>
+    <h1 class="hero-title">
+      UNIMCO는<br>
+      소재의 한계를 해결하기 위해<br>
+      만들어졌습니다.
+    </h1>
+    <p class="hero-sub">기술 기반으로 시작된 회사입니다.</p>
+  </div>
+</section>
+
+<!-- ── 02. 기술 기반 ── -->
+<section class="origin-sec">
+  <div class="origin-inner">
+    <div class="reveal">
+      <div class="origin-label">기술 기반</div>
+      <h2 class="origin-headline">왜 존재하는<br>회사인가</h2>
+    </div>
+    <div class="origin-body reveal d1">
+      <p>
+        ECO-Almag은 기존 알루미늄 합금의 한계를 해결하기 위한
+        연구에서 시작되었습니다.
+      </p>
+      <p>
+        <strong>고함량 Mg 합금의 산화 문제를 해결하면서
+        기존 소재로는 불가능했던 영역을 열었습니다.</strong>
+      </p>
+      <p>
+        경량화, 고강도, 친환경을 동시에 충족하는 소재가
+        시장에 존재하지 않았습니다. UNIMCO는 그 간극을
+        기술로 메우기 위해 2021년에 설립됐습니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 03. 핵심 기술 포인트 ── -->
+<section class="tech-sec">
+  <div class="tech-inner">
+    <div class="tech-head reveal">
+      <h2>핵심 기술 포인트</h2>
+      <p>MATERIAL 페이지에서 상세 내용을 확인하실 수 있습니다.</p>
+    </div>
+    <div class="tech-cols">
+      <div class="tech-col reveal">
+        <div class="tech-col-num">01</div>
+        <div class="tech-col-name">CaO 보호막 기술</div>
+        <div class="tech-arrow">→</div>
+        <div class="tech-result">고함량 Mg 안정화</div>
+        <div class="tech-desc">칼슘 성분이 표면을 감싸 용융 중 산화를 억제합니다. Mg 6~9% 함량에서도 안정적인 합금 생산이 가능합니다.</div>
+      </div>
+      <div class="tech-col reveal d1">
+        <div class="tech-col-num">02</div>
+        <div class="tech-col-name">주조 안정성 확보</div>
+        <div class="tech-arrow">→</div>
+        <div class="tech-result">양산 가능</div>
+        <div class="tech-desc">기존 주조 방식 대비 공정이 훨씬 안정적입니다. 불량률을 낮추고 대량 양산 신뢰성을 확보했습니다.</div>
+      </div>
+      <div class="tech-col reveal d2">
+        <div class="tech-col-num">03</div>
+        <div class="tech-col-name">SF₆-Free 공정</div>
+        <div class="tech-arrow">→</div>
+        <div class="tech-result">환경 규제 대응</div>
+        <div class="tech-desc">SF₆ 없이도 동일한 품질을 냅니다. EU CBAM 규제를 선제적으로 충족하는 유일한 공정입니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 04. 사업 구조 ── -->
+<section class="biz-sec">
+  <div class="biz-inner">
+    <div class="biz-head reveal">
+      <h2>사업 구조</h2>
+      <p>소재 개발부터 양산 공급까지 하나의 체계로 연결되어 있습니다.</p>
+    </div>
+    <div class="biz-flow reveal d1">
+
+      <div class="biz-step">
+        <div class="biz-step-num">Step 01</div>
+        <div class="biz-step-title">소재 개발</div>
+        <div class="biz-step-desc">ECO-Almag 합금 설계 및 기술 고도화</div>
+        <div class="biz-step-items">
+          <div class="biz-step-item">CaO 보호막 기술</div>
+          <div class="biz-step-item">합금 배합 최적화</div>
+          <div class="biz-step-item">물성 시험 및 검증</div>
+        </div>
+      </div>
+
+      <div class="biz-arrow">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 14h18M16 7l7 7-7 7"/>
+        </svg>
+      </div>
+
+      <div class="biz-step">
+        <div class="biz-step-num">Step 02</div>
+        <div class="biz-step-title">제품 적용</div>
+        <div class="biz-step-desc">산업별 요구 조건에 맞춰 제품 형태로 가공</div>
+        <div class="biz-step-items">
+          <div class="biz-step-item">Sheet / Plate</div>
+          <div class="biz-step-item">Component 가공</div>
+          <div class="biz-step-item">고객사 도면 기반</div>
+        </div>
+      </div>
+
+      <div class="biz-arrow">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 14h18M16 7l7 7-7 7"/>
+        </svg>
+      </div>
+
+      <div class="biz-step">
+        <div class="biz-step-num">Step 03</div>
+        <div class="biz-step-title">양산 공급</div>
+        <div class="biz-step-desc">국내외 생산 기반을 통한 안정적 대량 공급</div>
+        <div class="biz-step-items">
+          <div class="biz-step-item">국내 본사 생산</div>
+          <div class="biz-step-item">글로벌 공급 체계</div>
+          <div class="biz-step-item">품질 보증</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="biz-summary reveal d2">
+      <strong>하나의 체계로 연결되어 있습니다.</strong><br>
+      소재부터 완제품까지 수직계열화된 공급 구조로 일관된 품질을 보장합니다.
+    </p>
+  </div>
+</section>
+
+<!-- ── 05. 글로벌 공급 기반 ── -->
+<section class="global-sec">
+  <div class="global-inner">
+    <div class="global-text reveal">
+      <div class="global-label">글로벌 공급 기반</div>
+      <h2 class="global-headline">국내 생산 기반 위에<br>글로벌 공급이 가능합니다.</h2>
+      <p class="global-body">
+        국내 본사의 생산 기반 위에 유럽 파트너
+        <strong>IMPEXMETAL(Poland)</strong>과의 협력을 통해
+        대량 생산 및 안정적인 글로벌 공급 체계를 갖추고 있습니다.
+      </p>
+    </div>
+
+    <div class="global-visual reveal d1">
+      <div class="supply-row">
+        <div class="supply-node accent">
+          <div class="supply-node-label">본사 생산</div>
+          <div class="supply-node-name">UNIMCO Korea</div>
+          <div class="supply-node-desc">전라북도 군산 · 인천 송도 연구소</div>
+        </div>
+        <div class="supply-arrow-h">→</div>
+        <div class="supply-node">
+          <div class="supply-node-label">글로벌 파트너</div>
+          <div class="supply-node-name">IMPEXMETAL</div>
+          <div class="supply-node-desc">Poland · 유럽 양산 기반</div>
+        </div>
+      </div>
+      <div class="supply-arrow-v">↓</div>
+      <div class="supply-row">
+        <div class="supply-node" style="grid-column: 1 / -1;">
+          <div class="supply-node-label">공급 대상</div>
+          <div class="supply-node-name">반도체 · EV · 선박·방산 · 디스플레이</div>
+          <div class="supply-node-desc">국내외 산업 현장 안정 공급</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 06. 수상 · 인증 ── -->
+<section class="award-sec">
+  <div class="award-inner">
+    <div class="award-head reveal">
+      <h2>수상 · 인증</h2>
+    </div>
+    <div class="award-divider reveal"></div>
+    <div class="award-cols">
+      <div class="reveal">
+        <div class="award-col-header">수상 이력</div>
+        <div class="award-col-line"></div>
+        <ul class="award-list">
+          <li>소재 기술 혁신 부문 장관상 <span>· 산업통상자원부 · 2025</span></li>
+          <li>2026 소재 혁신 기업 대상 <span>· [주관 기관] · 2026</span></li>
+          <li>[수상명] <span>· [기관] · [연도]</span></li>
+        </ul>
+      </div>
+      <div class="reveal d1">
+        <div class="award-col-header">인증</div>
+        <div class="award-col-line"></div>
+        <ul class="award-list">
+          <li>[인증명] <span>· [기관] · [연도]</span></li>
+          <li>[인증명] <span>· [기관] · [연도]</span></li>
+          <li>[인증명] <span>· [기관] · [연도]</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="award-note reveal">※ 인증서 이미지는 보안상 공개하지 않습니다.</p>
+  </div>
+</section>
+
+<!-- ── 07. 현재 진행 ── -->
+<section class="progress-sec">
+  <div class="progress-inner">
+    <div class="reveal">
+      <h2 class="progress-left">현재 진행</h2>
+      <p style="font-size:14px;color:var(--subtext);margin-top:12px;line-height:1.7;word-break:keep-all;">각 산업에서 적용 테스트 및 개발이 진행되고 있습니다.</p>
+    </div>
+    <div class="progress-items reveal d1">
+      <div class="progress-item">
+        <div class="progress-industry">반도체</div>
+        <div class="progress-status">웨이퍼링 프레임 적용 납품 진행 중. <strong>생산성 +20% 향상</strong> 확인.</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-industry">EV · 배터리</div>
+        <div class="progress-status">배터리팩 케이스 및 방열 소재 개발 적용. <strong>원가 20~40% 절감</strong> 검증.</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-industry">선박 · 방산</div>
+        <div class="progress-status">경량 구조체 및 방호 부품 납품. <strong>강철 대비 56% 경량화</strong> 달성.</div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-industry">디스플레이</div>
+        <div class="progress-status">정밀 프레임 적용 테스트 진행 중.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 08. 오시는 길 ── -->
+<section class="location-sec">
+  <div class="location-inner">
+    <div class="location-head reveal">
+      <h2>오시는 길</h2>
+    </div>
+    <div class="location-cols">
+      <div class="location-card reveal">
+        <div class="location-card-label">본사</div>
+        <div class="location-card-line"></div>
+        <div class="location-card-name">전라북도 군산시</div>
+        <div class="location-card-addr">
+          전라북도 군산시 [상세 주소]<br>
+          대표전화 · 000-000-0000<br>
+          이메일 · info@unimco.com
+        </div>
+        <div class="map-placeholder">지도 삽입 영역</div>
+      </div>
+      <div class="location-card reveal d1">
+        <div class="location-card-label">연구소</div>
+        <div class="location-card-line"></div>
+        <div class="location-card-name">인천광역시 연수구 송도</div>
+        <div class="location-card-addr">
+          인천광역시 연수구 송도 [상세 주소]<br>
+          대표전화 · 000-000-0000<br>
+          이메일 · research@unimco.com
+        </div>
+        <div class="map-placeholder">지도 삽입 영역</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 09. CTA ── -->
+<section class="cta-sec">
+  <h2 class="reveal">적용 가능성이나 협력에 대해 궁금하시다면</h2>
+  <p class="reveal d1">산업과 용도를 알려주시면 함께 검토합니다.</p>
+  <a href="unimco-contact.html" class="btn btn-outline-white reveal d2">문의하기</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">UNIMCO</div>
+      <p>차세대 경량 고강도 친환경 알루미늄 합금 솔루션.<br>본사: 전라북도 군산시<br>연구소: 인천광역시 연수구 송도</p>
+    </div>
+    <div class="footer-col"><h4>회사 소개</h4><ul><li><a href="unimco-about.html">About Us</a></li><li><a href="unimco-material.html">소재 이야기</a></li><li><a href="unimco-product.html">제품</a></li></ul></div>
+    <div class="footer-col"><h4>소식</h4><ul><li><a href="unimco-news.html">News</a></li><li><a href="unimco-contact.html">Contact</a></li><li><a href="#">개인정보처리방침</a></li></ul></div>
+    <div class="footer-col"><h4>고객 지원</h4><ul><li><a href="#">info@unimco.com</a></li><li><a href="#">000-000-0000</a></li><li><a href="unimco-contact.html">문의하기</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 UNIMCO Corporation. All Rights Reserved.</p>
+    <p>개인정보처리방침 &nbsp;·&nbsp; 이용약관</p>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

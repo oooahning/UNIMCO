@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>UNIMCO — 납품 실적</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --black:   #3C3C3C;
+    --green:   #9CCFA4;
+    --base:    #FDFDFC;
+    --soft:    #E3F1E5;
+    --neutral: #CFD6CF;
+    --deep:    #4E735A;
+    --white:   #FFFFFF;
+    --subtext: #5A605A;
+    --divider: #BFC9BF;
+    --font: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { background: var(--base); color: var(--black); font-family: var(--font); min-width: 1440px; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ── NAV ── */
+  nav { background: var(--deep); height: 64px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
+  .nav-inner { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 60px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: 0.06em; }
+  .nav-links { display: flex; align-items: center; list-style: none; }
+  .nav-links li a { display: block; padding: 0 18px; height: 64px; line-height: 64px; font-size: 12px; font-weight: 600; letter-spacing: 0.10em; color: rgba(255,255,255,0.75); text-transform: uppercase; transition: color 0.22s ease, font-size 0.22s ease, letter-spacing 0.22s ease; }
+  .nav-links li a:hover { color: var(--green); font-size: 13px; letter-spacing: 0.06em; }
+  .nav-links li.active a { background: var(--green); color: var(--deep); font-size: 12px; }
+  .nav-links li.active a:hover { font-size: 12px; color: var(--deep); }
+  .nav-cta a { padding: 9px 24px; border: 1.5px solid var(--green); color: var(--green); font-size: 12px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; transition: all 0.2s; }
+  .nav-cta a:hover { background: var(--green); color: var(--deep); }
+
+  /* ── BTN ── */
+  .btn { display: inline-block; padding: 13px 28px; font-family: var(--font); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.22s; cursor: pointer; border: 1.5px solid transparent; }
+  .btn-outline-white { border-color: rgba(255,255,255,0.72); color: var(--white); }
+  .btn-outline-white:hover { background: var(--white); color: var(--deep); }
+  .btn-green { background: var(--green); color: var(--deep); border-color: var(--green); }
+  .btn-green:hover { background: transparent; color: var(--green); }
+  .btn-outline-deep { border-color: var(--deep); color: var(--deep); }
+  .btn-outline-deep:hover { background: var(--deep); color: var(--white); }
+
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .d1 { transition-delay: 0.10s; }
+  .d2 { transition-delay: 0.20s; }
+  .d3 { transition-delay: 0.32s; }
+
+  /* ══════════════════════════════
+     01. HERO
+  ══════════════════════════════ */
+  .hero { display: grid; grid-template-columns: 52% 48%; height: 520px; }
+  .hero-left { background: var(--deep); padding: 0 60px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+  .hero-left::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,0,0,0.18) 0%, transparent 55%); pointer-events: none; }
+  .hero-kicker { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--green); margin-bottom: 22px; position: relative; }
+  .hero-title { font-size: 44px; font-weight: 700; line-height: 1.2; color: var(--white); margin-bottom: 28px; word-break: keep-all; position: relative; }
+  .hero-sub { font-size: 15px; line-height: 1.85; color: rgba(255,255,255,0.65); max-width: 500px; margin-bottom: 44px; word-break: keep-all; position: relative; }
+  .hero-btns { display: flex; gap: 14px; position: relative; }
+  .hero-right { position: relative; overflow: hidden; }
+  .hero-right img { filter: brightness(0.72) saturate(0.75); transition: transform 8s ease; }
+  .hero-right:hover img { transform: scale(1.04); }
+  .hero-right::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(78,115,90,0.25) 0%, transparent 40%); }
+
+  /* ══════════════════════════════
+     02. TRUST BLOCK — 검증 요약
+     Neutral 배경, 좌 리스트 + 우 수치
+  ══════════════════════════════ */
+  .trust-sec { background: var(--neutral); padding: 80px 0; }
+  .trust-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .trust-left h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--black);
+    margin-bottom: 28px;
+    line-height: 1.3;
+    word-break: keep-all;
+  }
+  .trust-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .trust-list li {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--black);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.4;
+  }
+  .trust-list li::before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--deep);
+    flex-shrink: 0;
+  }
+
+  /* 우측 수치 4개 — 세로 구분선 */
+  .trust-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  .trust-stat {
+    padding: 32px 32px;
+    border-right: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+  }
+  .trust-stat:nth-child(2) { border-right: none; }
+  .trust-stat:nth-child(3) { border-bottom: none; }
+  .trust-stat:nth-child(4) { border-right: none; border-bottom: none; }
+
+  .trust-stat-val {
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--deep);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .trust-stat-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--subtext);
+    line-height: 1.5;
+    word-break: keep-all;
+  }
+
+  /* ══════════════════════════════
+     03. 주요 적용 사례 — 핵심 섹션
+     큰 산업명 좌 + 우측 상세 블록
+     교차 배경
+  ══════════════════════════════ */
+  .case-sec { padding: 0; }
+
+  .case-item {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--neutral);
+  }
+  .case-item:nth-child(odd)  { background: var(--base); }
+  .case-item:nth-child(even) { background: var(--soft); }
+  .case-item:last-child { border-bottom: none; }
+
+  .case-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 60px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 0 100px;
+    align-items: start;
+  }
+
+  /* 좌: 산업명 */
+  .case-industry {
+    padding-top: 4px;
+    position: sticky;
+    top: 100px;
+  }
+  .case-industry-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--subtext);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .case-industry-name {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--black);
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  /* 우: 적용·환경·결과 블록 */
+  .case-blocks { display: flex; flex-direction: column; gap: 0; }
+  .case-block {
+    padding: 28px 0;
+    border-top: 1px solid var(--neutral);
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 0 24px;
+    align-items: start;
+  }
+  .case-block:last-child { border-bottom: 1px solid var(--neutral); }
+
+  .case-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--deep);
+    padding-top: 3px;
+  }
+  .case-content {
+    font-size: 15px;
+    line-height: 1.72;
+    color: var(--black);
+    word-break: keep-all;
+  }
+  .case-content p { color: var(--subtext); font-size: 14px; margin-top: 4px; }
+
+  /* 적용 부품 태그 */
+  .case-parts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .case-part {
+    display: inline-block;
+    padding: 5px 14px;
+    border: 1px solid var(--neutral);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--subtext);
+  }
+
+  /* 결과 수치 강조 */
+  .case-result-num {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--deep);
+    letter-spacing: -0.02em;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .case-result-desc {
+    font-size: 14px;
+    color: var(--subtext);
+    line-height: 1.6;
+  }
+
+  /* ══════════════════════════════
+     04. 협력 및 글로벌 공급 체계
+     딥그린 배경, 좌 텍스트 + 우 로고
+  ══════════════════════════════ */
+  .partner-sec { background: var(--deep); padding: 100px 0; }
+  .partner-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 60px;
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .partner-text h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.35;
+    margin-bottom: 24px;
+    word-break: keep-all;
+  }
+  .partner-text h2 em { font-style: normal; color: var(--green); }
+  .partner-text p {
+    font-size: 15px;
+    line-height: 1.82;
+    color: rgba(255,255,255,0.62);
+    word-break: keep-all;
+    margin-bottom: 16px;
+  }
+  .partner-text p:last-child { margin-bottom: 0; }
+
+  /* 로고 그리드 — 작게, 과장 없이 */
+  .partner-logos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .partner-logo {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.14);
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.04em;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .partner-logo:hover {
+    background: rgba(156,207,164,0.12);
+    border-color: rgba(156,207,164,0.3);
+    color: var(--green);
+  }
+
+  /* ══════════════════════════════
+     05. CTA
+  ══════════════════════════════ */
+  .cta-sec { background: var(--soft); padding: 100px 0; text-align: center; }
+  .cta-sec h2 { font-size: 28px; font-weight: 700; color: var(--black); margin-bottom: 16px; line-height: 1.35; word-break: keep-all; }
+  .cta-sec p { font-size: 15px; color: var(--subtext); line-height: 1.7; margin-bottom: 40px; word-break: keep-all; }
+
+  /* ══════════════════════════════
+     FOOTER
+  ══════════════════════════════ */
+  footer { background: #1C2B21; padding: 72px 0 40px; }
+  .footer-inner { max-width: 1440px; margin: 0 auto; padding: 0 60px; display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr; gap: 56px; }
+  .footer-logo { font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: 0.06em; margin-bottom: 18px; }
+  .footer-brand p { font-size: 13px; line-height: 1.9; color: rgba(255,255,255,0.36); max-width: 300px; word-break: keep-all; }
+  .footer-col h4 { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green); margin-bottom: 20px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+  .footer-col ul li a { font-size: 13px; color: rgba(255,255,255,0.45); transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--green); }
+  .footer-bottom { max-width: 1440px; margin: 52px auto 0; padding: 24px 60px 0; border-top: 1px solid rgba(255,255,255,0.07); display: flex; justify-content: space-between; }
+  .footer-bottom p { font-size: 11px; color: rgba(255,255,255,0.22); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="unimco-home.html" class="nav-logo">UNIMCO</a>
+    <ul class="nav-links">
+      <li><a href="unimco-home.html">HOME</a></li>
+      <li><a href="unimco-material.html">MATERIAL</a></li>
+      <li><a href="unimco-product.html">PRODUCT</a></li>
+      <li class="active"><a href="unimco-clients.html">CLIENTS</a></li>
+      <li><a href="unimco-news.html">NEWS</a></li>
+      <li><a href="unimco-about.html">ABOUT</a></li>
+    </ul>
+    <div class="nav-cta"><a href="unimco-contact.html">CONTACT</a></div>
+  </div>
+</nav>
+
+<!-- ── 01. HERO ── -->
+<section class="hero">
+  <div class="hero-left">
+    <span class="hero-kicker">Clients · Verified Applications</span>
+    <h1 class="hero-title">
+      ECO-Almag은<br>
+      이미 산업 현장에서<br>
+      검증되고 있습니다.
+    </h1>
+    <p class="hero-sub">
+      적용 환경과 결과를 중심으로<br>
+      실제 사례를 소개합니다.
+    </p>
+    <div class="hero-btns">
+      <a href="#cases" class="btn btn-outline-white">적용 사례 보기</a>
+      <a href="unimco-contact.html" class="btn btn-green">문의하기</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=900&q=80&fit=crop&crop=center" alt="산업 현장">
+  </div>
+</section>
+
+<!-- ── 02. TRUST BLOCK ── -->
+<section class="trust-sec">
+  <div class="trust-inner">
+    <!-- 좌: 검증 환경 리스트 -->
+    <div class="trust-left reveal">
+      <h2>다음과 같은 환경에서<br>검증되고 있습니다.</h2>
+      <ul class="trust-list">
+        <li>반도체 장비</li>
+        <li>EV · 배터리</li>
+        <li>선박 · 방산</li>
+        <li>디스플레이</li>
+      </ul>
+    </div>
+
+    <!-- 우: 수치 4개 -->
+    <div class="trust-stats reveal d1">
+      <div class="trust-stat">
+        <div class="trust-stat-val">4개+</div>
+        <div class="trust-stat-label">적용 산업</div>
+      </div>
+      <div class="trust-stat">
+        <div class="trust-stat-val">3개+</div>
+        <div class="trust-stat-label">글로벌 납품처</div>
+      </div>
+      <div class="trust-stat">
+        <div class="trust-stat-val">67%</div>
+        <div class="trust-stat-label">스틸 대비 경량화</div>
+      </div>
+      <div class="trust-stat">
+        <div class="trust-stat-val">ZERO</div>
+        <div class="trust-stat-label">SF₆ 유해물질</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 03. 주요 적용 사례 ── -->
+<section class="case-sec" id="cases">
+
+  <!-- 반도체 장비 -->
+  <div class="case-item">
+    <div class="case-inner">
+      <div class="case-industry">
+        <div class="case-industry-num">01</div>
+        <div class="case-industry-name">반도체<br>장비</div>
+      </div>
+      <div class="case-blocks">
+        <div class="case-block">
+          <span class="case-label">적용</span>
+          <div class="case-content">
+            <div class="case-parts">
+              <span class="case-part">웨이퍼링 프레임</span>
+              <span class="case-part">정밀 구조 부품</span>
+            </div>
+          </div>
+        </div>
+        <div class="case-block">
+          <span class="case-label">환경</span>
+          <div class="case-content">
+            정밀도 유지 + 경량화가 동시에 요구되는 현장
+            <p>공정 속도가 빨라질수록 구조물의 무게가 정밀도에 직접 영향을 줍니다. 경량화와 치수 안정성을 동시에 충족해야 했습니다.</p>
+          </div>
+        </div>
+        <div class="case-block">
+          <span class="case-label">결과</span>
+          <div class="case-content">
+            <span class="case-result-num">+20%</span>
+            <span class="case-result-desc">생산성 향상 / 동일 강성 기준 경량화 달성</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EV · 배터리 -->
+  <div class="case-item">
+    <div class="case-inner">
+      <div class="case-industry">
+        <div class="case-industry-num">02</div>
+        <div class="case-industry-name">EV ·<br>배터리</div>
+      </div>
+      <div class="case-blocks">
+        <div class="case-block">
+          <span class="case-label">적용</span>
+          <div class="case-content">
+            <div class="case-parts">
+              <span class="case-part">배터리팩 케이스</span>
+              <span class="case-part">방열 구조</span>
+            </div>
+          </div>
+        </div>
+        <div class="case-block">
+          <span class="case-label">환경</span>
+          <div class="case-content">
+            경량화 + 열관리가 동시에 요구되는 현장
+            <p>배터리 케이스는 가볍고 열에 강해야 합니다. 두 조건을 동시에 충족하는 소재가 없었습니다.</p>
+          </div>
+        </div>
+        <div class="case-block">
+          <span class="case-label">결과</span>
+          <div class="case-content">
+            <span class="case-result-num">20~40%</span>
+            <span class="case-result-desc">공정 단순화로 원가 절감 / 경량화 + 열관리 동시 대응</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 선박 · 방산 -->
+  <div class="case-item">
+    <div class="case-inner">
+      <div class="case-industry">
+        <div class="case-industry-num">03</div>
+        <div class="case-industry-name">선박 ·<br>방산</div>
+      </div>
+      <div class="case-blocks">
+        <div class="case-block">
+          <span class="case-label">적용</span>
+          <div class="case-content">
+            <div class="case-parts">
+              <span class="case-part">경량 구조체</span>
+              <span class="case-part">방호 부품</span>
+              <span class="case-part">후판</span>
+            </div>
+          </div>
+        </div>
+        <div class="case-block">
+          <span class="case-label">환경</span>
+          <div class="case-content">
+            기동성 + 내구성을 동시에 확보해야 하는 현장
+            <p>가볍게 만들면 충격에 취약해지고, 내구성을 높이면 무게가 늘어납니다. 기존 강철로는 이 간극을 좁힐 수 없었습니다.</p>
+          </div>
+        </div>
+        <div class="case-block">
+          <span class="case-label">결과</span>
+          <div class="case-content">
+            <span class="case-result-num">56%</span>
+            <span class="case-result-desc">강철 대비 경량화 / 충격흡수율 5배 확보</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 디스플레이 -->
+  <div class="case-item">
+    <div class="case-inner">
+      <div class="case-industry">
+        <div class="case-industry-num">04</div>
+        <div class="case-industry-name">디스플<br>레이</div>
+      </div>
+      <div class="case-blocks">
+        <div class="case-block">
+          <span class="case-label">적용</span>
+          <div class="case-content">
+            <div class="case-parts">
+              <span class="case-part">정밀 프레임</span>
+              <span class="case-part">지지 구조</span>
+            </div>
+          </div>
+        </div>
+        <div class="case-block">
+          <span class="case-label">환경</span>
+          <div class="case-content">
+            치수 안정성 + 경량화가 동시에 요구되는 현장
+            <p>패널이 커질수록 프레임이 무거워집니다. 대형 디스플레이일수록 정밀도는 높아야 하고 무게는 줄어야 합니다.</p>
+          </div>
+        </div>
+        <div class="case-block">
+          <span class="case-label">결과</span>
+          <div class="case-content">
+            <span class="case-result-num">치수 안정</span>
+            <span class="case-result-desc">정밀도 유지 / 동일 강성 기준 경량화 달성</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── 04. 협력 및 글로벌 공급 체계 ── -->
+<section class="partner-sec">
+  <div class="partner-inner">
+    <div class="partner-text reveal">
+      <h2>다양한 기업과 함께<br><em>적용 테스트 및 개발이<br>진행되고 있습니다.</em></h2>
+      <p>국내 본사와 글로벌 파트너십을 통해 안정적인 대량 공급 체계를 갖추고 있습니다.</p>
+      <p>실제 적용 환경에서 검증된 소재입니다. 산업별 요구 조건에 맞춰 적용이 진행되고 있습니다.</p>
+    </div>
+    <div class="partner-logos reveal d1">
+      <div class="partner-logo">Client A</div>
+      <div class="partner-logo">Client B</div>
+      <div class="partner-logo">Client C</div>
+      <div class="partner-logo">Client D</div>
+      <div class="partner-logo">Client E</div>
+      <div class="partner-logo">Client F</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 05. CTA ── -->
+<section class="cta-sec">
+  <h2 class="reveal">귀사의 환경에서도 적용 가능한지 확인해드립니다.</h2>
+  <p class="reveal d1">산업과 용도를 알려주시면 적용 가능성을 함께 검토합니다.</p>
+  <a href="unimco-contact.html" class="btn btn-outline-deep reveal d2">문의하기</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">UNIMCO</div>
+      <p>차세대 경량 고강도 친환경 알루미늄 합금 솔루션.<br>본사: 전라북도 군산시<br>연구소: 인천광역시 연수구 송도</p>
+    </div>
+    <div class="footer-col"><h4>회사 소개</h4><ul><li><a href="unimco-about.html">About Us</a></li><li><a href="unimco-material.html">소재 이야기</a></li><li><a href="unimco-product.html">제품</a></li></ul></div>
+    <div class="footer-col"><h4>소식</h4><ul><li><a href="unimco-news.html">News</a></li><li><a href="unimco-contact.html">Contact</a></li><li><a href="#">개인정보처리방침</a></li></ul></div>
+    <div class="footer-col"><h4>고객 지원</h4><ul><li><a href="#">info@unimco.com</a></li><li><a href="#">000-000-0000</a></li><li><a href="unimco-contact.html">문의하기</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 UNIMCO Corporation. All Rights Reserved.</p>
+    <p>개인정보처리방침 &nbsp;·&nbsp; 이용약관</p>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
