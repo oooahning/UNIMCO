@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1440">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UNIMCO — ECO-Almag</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
@@ -599,6 +599,58 @@
     .hero-right-slide { position: absolute !important; }
   }
 
+
+  /* ═══════════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════════ */
+  @media (min-width: 1920px) {
+    .hero-slide { padding-left: max(80px, calc((100% - 560px) / 2)) !important; padding-right: 80px !important; }
+  }
+  @media (max-width: 1100px) {
+    .hero { display: flex !important; flex-direction: column !important; height: auto !important; }
+    .hero-left { min-height: 460px; padding: 56px 40px 80px !important; }
+    .hero-slide { padding: 56px 40px 80px !important; }
+    .hero-dots { left: 40px !important; }
+    .hero-right { height: 300px !important; width: 100% !important; position: relative !important; }
+    .hero-right-slide { position: absolute !important; inset: 0 !important; }
+    .hero-right-slide.active { opacity: 1 !important; }
+    .hero-arrow { display: none !important; }
+    .hero-title { font-size: 36px !important; }
+    .nav-inner, .footer-inner, .footer-bottom { padding-left: 40px !important; padding-right: 40px !important; }
+    .cv-cards, .app-grid { padding-left: 40px !important; padding-right: 40px !important; }
+    .cv-cards { grid-template-columns: repeat(2,1fr) !important; }
+    .app-grid { grid-template-columns: repeat(2,1fr) !important; }
+    .grid-3 { grid-template-columns: repeat(2,1fr) !important; }
+    .featured-row { grid-template-columns: 1fr !important; }
+    .contact-cta { grid-template-columns: 1fr !important; }
+    .cta-img-wrap { height: 260px !important; }
+    .footer-inner { grid-template-columns: 1fr 1fr !important; gap: 36px !important; }
+    .news-grid { grid-template-columns: repeat(2,1fr) !important; padding-left: 40px !important; padding-right: 40px !important; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none !important; }
+    .nav-inner { padding: 0 20px !important; }
+    .hero-left { padding: 44px 20px 72px !important; min-height: 380px; }
+    .hero-slide { padding: 44px 20px 72px !important; }
+    .hero-right { height: 220px !important; }
+    .hero-title { font-size: 26px !important; line-height: 1.28 !important; }
+    .hero-sub { font-size: 13px !important; }
+    .hero-btns { flex-direction: column !important; gap: 10px !important; }
+    .hero-btns .btn, .hero-btns a { display: block !important; text-align: center !important; }
+    .hero-dots { left: 20px !important; bottom: 20px !important; }
+    .sec-title { font-size: 26px !important; }
+    .cv-cards, .app-grid, .news-grid { grid-template-columns: 1fr !important; padding-left: 20px !important; padding-right: 20px !important; }
+    .grid-3, .grid-4, .featured-row, .featured-side { grid-template-columns: 1fr !important; }
+    .contact-cta { grid-template-columns: 1fr !important; }
+    .cta-img-wrap { height: 180px !important; }
+    .cta-form-panel { padding: 40px 20px !important; }
+    .form-title { font-size: 22px !important; }
+    .form-row.two { grid-template-columns: 1fr !important; }
+    .footer-inner { grid-template-columns: 1fr !important; gap: 28px !important; padding-left: 20px !important; padding-right: 20px !important; }
+    .footer-bottom { flex-direction: column !important; gap: 6px !important; padding-left: 20px !important; padding-right: 20px !important; }
+    .nav-inner { padding: 0 20px !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -608,14 +660,14 @@
   <div class="nav-inner">
     <div class="nav-logo">UNIMCO</div>
     <ul class="nav-links">
-      <li class="active"><a href="#">HOME</a></li>
-      <li><a href="#">MATERIAL</a></li>
-      <li><a href="#">PRODUCT</a></li>
-      <li><a href="#">CLIENTS</a></li>
-      <li><a href="#">NEWS</a></li>
-      <li><a href="#">ABOUT</a></li>
+      <li class="active"><a href="unimco-home.html">HOME</a></li>
+      <li><a href="unimco-material.html">MATERIAL</a></li>
+      <li><a href="unimco-product.html">PRODUCT</a></li>
+      <li><a href="unimco-clients.html">CLIENTS</a></li>
+      <li><a href="unimco-news.html">NEWS</a></li>
+      <li><a href="unimco-about.html">ABOUT</a></li>
     </ul>
-    <div class="nav-cta"><a href="#">CONTACT</a></div>
+    <div class="nav-cta"><a href="unimco-contact.html">CONTACT</a></div>
   </div>
 </nav>
 
@@ -633,8 +685,8 @@
       <h1 class="hero-title">차세대 경량 고강도<br><span class="accent">친환경 알루미늄 합금 솔루션</span></h1>
       <p class="hero-sub">글로벌 EV 밸류체인의 핵심 파트너로서 소재부터 완제품까지 수직계열화를 완성하는 혁신적 경량화 솔루션</p>
       <div class="hero-btns">
-        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
-        <a href="#" class="btn btn-green">문의하기</a>
+        <a href="unimco-material.html" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="unimco-contact.html" class="btn btn-green">문의하기</a>
       </div>
     </div>
 
@@ -643,8 +695,8 @@
       <h1 class="hero-title">반도체 패키징의<br><span class="accent">핵심 소재 혁신</span></h1>
       <p class="hero-sub">Wafer Ring Frame 경량화로 생산성 +20% 향상. 삼성, SK하이닉스, TSMC 등 글로벌 Top-tier 향 개발 진행</p>
       <div class="hero-btns">
-        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
-        <a href="#" class="btn btn-green">문의하기</a>
+        <a href="unimco-material.html" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="unimco-contact.html" class="btn btn-green">문의하기</a>
       </div>
     </div>
 
@@ -653,8 +705,8 @@
       <h1 class="hero-title">전기차 배터리의<br><span class="accent">경량화 솔루션</span></h1>
       <p class="hero-sub">배터리 팩 케이스 경량화로 주행거리 향상 및 열관리 최적화. 공정 단순화로 원가 20~40% 절감</p>
       <div class="hero-btns">
-        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
-        <a href="#" class="btn btn-green">문의하기</a>
+        <a href="unimco-material.html" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="unimco-contact.html" class="btn btn-green">문의하기</a>
       </div>
     </div>
 
@@ -663,8 +715,8 @@
       <h1 class="hero-title">데이터 기반<br><span class="accent">정밀 제어 공정</span></h1>
       <p class="hero-sub">CaO 보호막 기술로 안전 용해부터 정밀 압연, 이형 압출까지. 글로벌 파트너십 기반 양산 체계 구축</p>
       <div class="hero-btns">
-        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
-        <a href="#" class="btn btn-green">문의하기</a>
+        <a href="unimco-material.html" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="unimco-contact.html" class="btn btn-green">문의하기</a>
       </div>
     </div>
 
@@ -673,8 +725,8 @@
       <h1 class="hero-title">차세대 경량<br><span class="accent">방호 소재</span></h1>
       <p class="hero-sub">기존 강철 대비 56% 경량화, 충격흡수율 5배. ADD(국방과학연구소) 협력 기반 경량 방탄 솔루션</p>
       <div class="hero-btns">
-        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
-        <a href="#" class="btn btn-green">문의하기</a>
+        <a href="unimco-material.html" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="unimco-contact.html" class="btn btn-green">문의하기</a>
       </div>
     </div>
 
@@ -683,8 +735,8 @@
       <h1 class="hero-title">지속 가능한<br><span class="accent">친환경 소재 혁신</span></h1>
       <p class="hero-sub">SF₆/Be 완전 배제, 탄소배출 30%+ 감축. EU CBAM 규제를 선제적으로 충족하는 유일한 친환경 합금</p>
       <div class="hero-btns">
-        <a href="#" class="btn btn-outline-white">소재 살펴보기</a>
-        <a href="#" class="btn btn-green">문의하기</a>
+        <a href="unimco-material.html" class="btn btn-outline-white">소재 살펴보기</a>
+        <a href="unimco-contact.html" class="btn btn-green">문의하기</a>
       </div>
     </div>
 
@@ -754,7 +806,7 @@
       <div class="cv-body">
         <div class="cv-stat">2.62 g/cm³</div>
         <div class="cv-desc">스테인리스 대비 3분의 1 수준의 밀도. 같은 강도에서 무게를 혁신적으로 낮춥니다.</div>
-        <a href="#" class="cv-more">자세히 보기</a>
+        <a href="unimco-material.html" class="cv-more">자세히 보기</a>
       </div>
     </div>
     <div class="cv-card reveal reveal-d2">
@@ -765,7 +817,7 @@
       <div class="cv-body">
         <div class="cv-stat">650 MPa</div>
         <div class="cv-desc">기존 알루미늄 합금 대비 높은 인장강도. 정밀 구조가 필요한 현장에서 결정적 차이를 만듭니다.</div>
-        <a href="#" class="cv-more">자세히 보기</a>
+        <a href="unimco-material.html" class="cv-more">자세히 보기</a>
       </div>
     </div>
     <div class="cv-card reveal reveal-d3">
@@ -776,12 +828,12 @@
       <div class="cv-body">
         <div class="cv-stat">ZERO SF₆</div>
         <div class="cv-desc">유해 가스 SF₆ 없이 생산됩니다. 친환경 공정이 성능을 포기하지 않아도 된다는 증거.</div>
-        <a href="#" class="cv-more">자세히 보기</a>
+        <a href="unimco-material.html" class="cv-more">자세히 보기</a>
       </div>
     </div>
   </div>
   <div class="cta-wrap reveal">
-    <a href="#" class="btn btn-outline-deep">전체 소재 이야기 보기</a>
+    <a href="unimco-material.html" class="btn btn-outline-deep">전체 소재 이야기 보기</a>
   </div>
 </section>
 
@@ -799,7 +851,7 @@
       <div class="app-body">
         <div class="app-industry">반도체 · 장비</div>
         <div class="app-desc">웨이퍼링 프레임 및 장비 부품 경량화로 생산성 향상</div>
-        <a href="#" class="app-more">더보기</a>
+        <a href="unimco-product.html" class="app-more">더보기</a>
       </div>
     </div>
     <div class="app-card reveal reveal-d2">
@@ -809,7 +861,7 @@
       <div class="app-body">
         <div class="app-industry">EV · 배터리</div>
         <div class="app-desc">배터리팩 케이스 및 방열 소재, 열관리 대응</div>
-        <a href="#" class="app-more">더보기</a>
+        <a href="unimco-product.html" class="app-more">더보기</a>
       </div>
     </div>
     <div class="app-card reveal reveal-d3">
@@ -819,7 +871,7 @@
       <div class="app-body">
         <div class="app-industry">선박 · 방산</div>
         <div class="app-desc">경량 구조체 적용으로 기동성 향상 및 내구성 확보</div>
-        <a href="#" class="app-more">더보기</a>
+        <a href="unimco-product.html" class="app-more">더보기</a>
       </div>
     </div>
     <div class="app-card reveal">
@@ -829,12 +881,12 @@
       <div class="app-body">
         <div class="app-industry">디스플레이</div>
         <div class="app-desc">정밀 프레임 및 지지 구조, 치수 안정성 확보</div>
-        <a href="#" class="app-more">더보기</a>
+        <a href="unimco-product.html" class="app-more">더보기</a>
       </div>
     </div>
   </div>
   <div class="cta-wrap reveal">
-    <a href="#" class="btn btn-outline-deep">전체 제품 보기</a>
+    <a href="unimco-product.html" class="btn btn-outline-deep">전체 제품 보기</a>
   </div>
 </section>
 
@@ -900,7 +952,7 @@
     </div>
     <div class="form-bottom">
       <p class="form-privacy">개인정보 처리방침에 동의합니다.</p>
-      <a href="#" class="btn btn-green">제출하기</a>
+      <a href="unimco-contact.html" class="btn btn-green">제출하기</a>
     </div>
   </div>
 </section>
@@ -912,7 +964,7 @@
       <span class="sec-label">News & Update</span>
       <h2 class="sec-title">최근 소식</h2>
     </div>
-    <a href="#" class="btn btn-outline-deep" style="font-size:11px; padding:10px 22px;">전체 소식 보기</a>
+    <a href="unimco-news.html" class="btn btn-outline-deep" style="font-size:11px; padding:10px 22px;">전체 소식 보기</a>
   </div>
   <div class="news-grid">
     <div class="news-card reveal reveal-d1">
@@ -922,7 +974,7 @@
       <div class="news-body">
         <div class="news-meta">2026. 04. 16</div>
         <div class="news-title">어디에 발만을 영업이익이 낮고 어쩌구 기사 제목</div>
-        <a href="#" class="news-more">Read More</a>
+        <a href="unimco-news.html" class="news-more">Read More</a>
       </div>
     </div>
     <div class="news-card reveal reveal-d2">
@@ -932,7 +984,7 @@
       <div class="news-body">
         <div class="news-meta">2026. 04. 14</div>
         <div class="news-title">기사 제목이 길 경우를 대비해서 이런 식으로 작성해보는 예시 제목</div>
-        <a href="#" class="news-more">Read More</a>
+        <a href="unimco-news.html" class="news-more">Read More</a>
       </div>
     </div>
     <div class="news-card reveal reveal-d3">
@@ -942,7 +994,7 @@
       <div class="news-body">
         <div class="news-meta">2026. 04. 10</div>
         <div class="news-title">홈페이지 만드는 비용과 관련한 소식 및 업데이트 내용</div>
-        <a href="#" class="news-more">Read More</a>
+        <a href="unimco-news.html" class="news-more">Read More</a>
       </div>
     </div>
   </div>
@@ -958,27 +1010,27 @@
     <div class="footer-col">
       <h4>회사 소개</h4>
       <ul>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">소재 이야기</a></li>
-        <li><a href="#">제품</a></li>
-        <li><a href="#">걸어온 길</a></li>
+        <li><a href="unimco-about.html">About Us</a></li>
+        <li><a href="unimco-material.html">소재 이야기</a></li>
+        <li><a href="unimco-product.html">제품</a></li>
+        <li><a href="unimco-about.html">걸어온 길</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>소식</h4>
       <ul>
-        <li><a href="#">News</a></li>
-        <li><a href="#">Contact</a></li>
-        <li><a href="#">개인정보처리방침</a></li>
-        <li><a href="#">이용약관</a></li>
+        <li><a href="unimco-news.html">News</a></li>
+        <li><a href="unimco-contact.html">Contact</a></li>
+        <li><a href="privacy.html">개인정보처리방침</a></li>
+        <li><a href="terms.html">이용약관</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>고객 지원</h4>
       <ul>
-        <li><a href="#">info@unimco.com</a></li>
-        <li><a href="#">000-000-0000</a></li>
-        <li><a href="#">문의하기</a></li>
+        <li><a href="mailto:info@unimco.com">info@unimco.com</a></li>
+        <li><a href="tel:000-000-0000">000-000-0000</a></li>
+        <li><a href="unimco-contact.html">문의하기</a></li>
       </ul>
     </div>
   </div>
